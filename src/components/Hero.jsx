@@ -5,13 +5,13 @@ export default function Hero() {
         {/* Título Vendedor */}
         <h1 className="text-4xl md:text-6xl font-bold text-slate-900 leading-tight">
           Instant Access to <span className="text-orange-600">Premium</span>{" "}
-          Laser Cut Designs
+          Laser Cut Designs for Your Projects
         </h1>
 
-        {/* Subtítulo */}
+        {/* Subtítulo Atualizado */}
         <p className="mt-6 text-lg text-slate-600">
-          Stop wasting wood with bad files. Download professional-grade SVG/DXF
-          projects and start cutting in minutes.
+          Stop wasting wood with bad files. Download professional-grade,
+          test-ready SVG/DXF projects. Get instant access today.
         </p>
 
         {/* Botão de Chamada para Ação (CTA) */}
@@ -24,6 +24,12 @@ export default function Hero() {
           >
             SHOP ALL DESIGNS NOW
           </a>
+        </div>
+
+        {/* Prova de Garantia Nova */}
+        <div className="mt-4 text-sm text-slate-600 font-semibold flex justify-center gap-4">
+          <span>✅ Secure Checkout</span>
+          <span>⭐ Satisfaction Guaranteed</span>
         </div>
 
         {/* Prova Social (A dica que te dei) */}
