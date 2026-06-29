@@ -45,11 +45,10 @@ app.post("/api/registrar-click", async (req, res) => {
     });
     res.status(200).json({ status: "click registrado no banco" });
   } catch (error: any) {
-    console.error("ERRO DETALHADO DO PRISMA:", error); // Isso vai aparecer no LOG do painel do Render
-    res.status(500).json({
-      error: "Erro ao registrar Click",
-      mensagemReal: error.message, // Isso vai aparecer no seu terminal ao rodar o curl
-    });
+    console.error("ERRO DO PRISMA:", error);
+    res
+      .status(500)
+      .json({ error: "Erro ao registrar Click", detalhe: error.message });
   }
 });
 
