@@ -1,4 +1,4 @@
-import {prisma} from './lib/prisma.js'
+import { prisma } from "./lib/prisma.js";
 
 import express from "express";
 import { randomUUID } from "node:crypto";
@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 const logsDeCliques: any[] = [];
-
 
 //Rota que vai gerar o link
 app.post("/gerar-link", (req, res) => {
@@ -36,20 +35,22 @@ app.post("/api/registrar-click", async (req, res) => {
   const { produtoId, meuIdAfiliado, sessionId } = req.body;
 
   try {
-await prisma.evento.create({
-      data:{
+    await prisma.evento.create({
+      data: {
         sessionId,
         tipo: "CLICK",
         produtoId,
-        afiliadoId: meuIdAfiliado
-      }
+        afiliadoId: meuIdAfiliado,
+      },
     });
-    res.status(200).json({status: "click registrado no banco"})
-  } catch (error:any) {
-    console.error('Erro detalhado do Prisma:', error)
-    res.status(500).json({error: "Erro ao registrar Click"})
+    res.status(200).json({ status: "click registrado no banco" });
+  } catch (error: any) {
+    console.error("ERRO DETALHADO DO PRISMA:", error); // Isso vai aparecer no LOG do painel do Render
+    res.status(500).json({
+      error: "Erro ao registrar Click",
+      mensagemReal: error.message, // Isso vai aparecer no seu terminal ao rodar o curl
+    });
   }
-
 });
 
 //2 Registro de Visualização (MEIO) - O usuário chegou na página de vendas ?
@@ -72,29 +73,29 @@ await prisma.evento.create({
 // })
 
 // 3 - Registro de Conversão (FUNDO) - O usuário comprou ?
-app.post("/api/registrar-conversao", async(req, res) => {
-  const {sessionId, valor, status, pedidoId} = req.body;
-  
+app.post("/api/registrar-conversao", async (req, res) => {
+  const { sessionId, valor, status, pedidoId } = req.body;
+
   try {
     await prisma.evento.create({
-      data:{
+      data: {
         sessionId,
         tipo: "CONVERCAO",
         valor: parseFloat(valor),
-        status
-      }
-    })
-    res.status(200).json({ status: "Conversão registrada no banco"})
+        status,
+      },
+    });
+    res.status(200).json({ status: "Conversão registrada no banco" });
   } catch (error) {
-    res.status(500).json({error: "Erro ao registrar conversão"})
+    res.status(500).json({ error: "Erro ao registrar conversão" });
   }
- })
+});
 
-app.get('/teste', (req, res) => {
+app.get("/teste", (req, res) => {
   return res.json({ mensagem: "O servidor está online e funcionando!" });
 });
 
- // --- SERVIDOR ---
+// --- SERVIDOR ---
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");
 });
