@@ -102,10 +102,14 @@ app.listen(3000, () => {
 
 
 
-import { Client } from 'pg'; // Você pode precisar de instalar: npm install pg
+import { Client } from 'pg';
 
 async function testarConexao() {
-  const client = new Client(process.env.DATABASE_URL);
+  // Usamos a string completa com o pgbouncer ativado
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL
+  });
+  
   try {
     await client.connect();
     console.log("CONEXÃO COM O BANCO BEM SUCEDIDA!");
