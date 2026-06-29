@@ -98,3 +98,20 @@ app.get("/teste", (req, res) => {
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");
 });
+
+
+
+
+import { Client } from 'pg'; // Você pode precisar de instalar: npm install pg
+
+async function testarConexao() {
+  const client = new Client(process.env.DATABASE_URL);
+  try {
+    await client.connect();
+    console.log("CONEXÃO COM O BANCO BEM SUCEDIDA!");
+    await client.end();
+  } catch (err) {
+    console.error("ERRO CRÍTICO NA CONEXÃO:", err);
+  }
+}
+testarConexao();
