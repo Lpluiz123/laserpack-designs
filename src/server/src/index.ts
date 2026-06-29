@@ -36,7 +36,7 @@ app.post("/api/registrar-click", async (req, res) => {
   const { produtoId, meuIdAfiliado, sessionId } = req.body;
 
   try {
-    await prisma.evento.create({
+await prisma.evento.create({
       data:{
         sessionId,
         tipo: "CLICK",
@@ -45,7 +45,8 @@ app.post("/api/registrar-click", async (req, res) => {
       }
     });
     res.status(200).json({status: "click registrado no banco"})
-  } catch (error) {
+  } catch (error:any) {
+    console.error('Erro detalhado do Prisma:', error)
     res.status(500).json({error: "Erro ao registrar Click"})
   }
 
