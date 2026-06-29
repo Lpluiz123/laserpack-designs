@@ -89,6 +89,9 @@ app.post("/api/registrar-conversao", async(req, res) => {
   }
  })
 
+app.get('/teste', (req, res) => {
+  return res.json({ mensagem: "O servidor está online e funcionando!" });
+});
 
  // --- SERVIDOR ---
 app.listen(3000, () => {
