@@ -1,4 +1,4 @@
-import { prisma } from "./lib/prisma.js";
+import { prisma } from "../src/lib/prisma.js";
 
 import express from "express";
 import { randomUUID } from "node:crypto";
@@ -9,90 +9,56 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const logsDeCliques: any[] = [];
+async function registrarClick(data:any) {
+  return await prisma.evento.create({
+    data: {
+      sessionId: data.sessionId,
+      tipo: "CLICK",
+      produtoId: data.produtoId,
+      afiliadoId: data.meuIdAfiliado,
 
-//Rota que vai gerar o link
-app.post("/gerar-link", (req, res) => {
-  const { nome, urlBase, meuIdAfiliado } = req.body;
-
-  const produto = {
-    id: randomUUID(),
-    nome,
-    urlBase,
-    meuIdAfiliado,
-  };
-
-  const link = criarLinkAfiliado(produto);
-
-  res.json({
-    mensagem: "Link gerado com sucesso!",
-    link: link,
+    },
   });
-});
+}
 
-// 1 - Registro de Click (TOPO) - Onde tudo começa
-app.post("/api/registrar-click", async (req, res) => {
-  const { produtoId, meuIdAfiliado, sessionId } = req.body;
+async function registrarConversao(data: any) {
+  return await prisma.evento.create({
+    data: {
+      sessionId: data.sessionId,
+      tipo: "CONVERCAO",
+      valor: parseFloat(data.valor),
+      status: data.status,
+      pedidoId: data.pedidoId,
+    },
+  });
+}
+
+/*------------------------------------------------------ */
+
+app.post("/api/evento", async (req, res) => {
+  const { tipo } = req.body;
 
   try {
-    await prisma.evento.create({
-      data: {
-        sessionId,
-        tipo: "CLICK",
-        produtoId,
-        afiliadoId: meuIdAfiliado,
-      },
-    });
-    res.status(200).json({ status: "click registrado no banco" });
+    if (tipo === "CLICK") {
+      await registrarClick(req.body);
+      return res.status(200).json({ status: "Clique registrado" });
+    } 
+    
+    if (tipo === "CONVERCAO") {
+      await registrarConversao(req.body);
+      return res.status(200).json({ status: "Conversão registrada" });
+    }
+
+    return res.status(400).json({ error: "Tipo de evento desconhecido" });
+    
   } catch (error: any) {
-    console.error("ERRO DO PRISMA:", error);
-    res
-      .status(500)
-      .json({ error: "Erro ao registrar Click", detalhe: error.message });
+    console.error("ERRO NO PROCESSAMENTO:", error);
+    return res.status(500).json({ error: "Erro ao registrar evento" });
   }
 });
 
-//2 Registro de Visualização (MEIO) - O usuário chegou na página de vendas ?
-// app.post("/api/registrar-visualizacao", async(req, res) => {
-//   const {sessionId, paginaOrigem} = req.body;
 
-//   try {
-//     await prisma.evento.create({
-//       data: {
-//         sessionId,
-//         tipo: "VISUALIZACAO",
-//         status: paginaOrigem
-//       }
-//     });
-//     res.status(200).json({ status: "Visualização registrada no banco"})
-//   } catch (error) {
-//     res.status(500).json({error: "Erro ao registrar visualização"});
-//   }
-
-// })
-
-// 3 - Registro de Conversão (FUNDO) - O usuário comprou ?
-app.post("/api/registrar-conversao", async (req, res) => {
-  const { sessionId, valor, status, pedidoId } = req.body;
-
-  try {
-    await prisma.evento.create({
-      data: {
-        sessionId,
-        tipo: "CONVERCAO",
-        valor: parseFloat(valor),
-        status,
-      },
-    });
-    res.status(200).json({ status: "Conversão registrada no banco" });
-  } catch (error) {
-    res.status(500).json({ error: "Erro ao registrar conversão" });
-  }
-});
-
-app.get("/teste", (req, res) => {
-  return res.json({ mensagem: "O servidor está online e funcionando!" });
-});
+ /*----------------------------------------------------- */
 
 // --- SERVIDOR ---
 app.listen(3000, () => {
@@ -100,7 +66,7 @@ app.listen(3000, () => {
 });
 
 
-
+/*------------------------------------------*/
 
 import { Client } from 'pg';
 
