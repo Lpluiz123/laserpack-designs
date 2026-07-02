@@ -1,9 +1,12 @@
 export const handleClick = async (valorDoProduto, sessionId) => {
+    const sessionId = localStorage.getItem("user_session") || "SEM_ACAO"
+
+    console.log("Clicou! Enviando para API com sessionId:", sessionId);
     try {
         const response = await fetch("https://backend-laserpack-designs.onrender.com/api/evento", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sessionId, valor: valorDoProduto, tipo: "CLICK" }),
+            body: JSON.stringify({ sessionId: sessionId, valor: valorDoProduto, tipo: "CLICK" }),
         });
 
         if (response.ok) {

@@ -16,7 +16,7 @@ async function registrarClick(data: any) {
         sessionId: data.sessionId || "SEM_SESSAO",
         tipo: data.tipo || "CLICK",
         // Campos opcionais removidos ou com valores padrão para não travar o Prisma
-        pedidoId: data.pedidoId || null, 
+        pedidoId: data.pedidoId || null,
       },
     });
   } catch (e) {
@@ -39,6 +39,7 @@ async function registrarConversao(data: any) {
 }
 
 /*------------------------------------------------------ */
+//ROTAS
 
 app.post("/api/evento", async (req, res) => {
   // 1. Log de segurança: Essencial para você ver no Render exatamente o que chegou
@@ -74,7 +75,7 @@ app.post("/api/evento", async (req, res) => {
     // Cenário B: Os dados vieram do seu FRONT-END (identificado pelo clique do botão)
     else {
       dadosPadronizados = {
-        sessionId: req.body.sessionId,
+        sessionId: req.body.sessionId || "ID_NAO_ENVIADO",
         // Garantimos que tanto 'CLICK' quanto 'click_checkout' caiam na mesma categoria
         tipo: "CLICK",
         valor: req.body.valor || 0,
@@ -108,12 +109,41 @@ app.post("/api/evento", async (req, res) => {
 });
 
 
+
+app.get("/api/dashboard", async(req, res) => {
+  try {
+    const hoje = new Date()
+    hoje.setHours(0, 0, 0, 0)
+
+    const eventos = await prisma.evento.findMany({
+      where: {
+        createdAt: {
+          gte: hoje,
+        },
+        tipo: {
+          in: ["CLICK", "CONVERSAO"]
+        }
+      }
+    })
+
+    const listaClicks = eventos.filter((evento => evento.tipo === "CLICK"))
+    const listaConversao = eventos.filter(evento => evento.tipo === "CONVERSAO")
+
+    console.log(eventos)
+    res.json({clicks: listaClicks.length, conversoes: listaConversao.length})
+  } catch (error) {
+    console.log("ERRO NA BUSCA", error)
+    res.status(500).json({error: "Erro ao buscar"})
+  }
+})
+
 /*----------------------------------------------------- */
 
 // --- SERVIDOR ---
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");
 });
+
 
 /*------------------------------------------*/
 
