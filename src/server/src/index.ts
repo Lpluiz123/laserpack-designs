@@ -10,15 +10,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 async function registrarClick(data: any) {
-  return await prisma.evento.create({
-    data: {
-      sessionId: data.sessionId || "TESTE_DIGISTORE",
-      tipo: data.tipo,
-      produtoId: data.produtoId || "N/A",
-      afiliadoId: data.afiliadoId || "N/A",
-      pedidoId: data.pedidoId,
-    },
-  });
+  try {
+    return await prisma.evento.create({
+      data: {
+        sessionId: data.sessionId || "SEM_SESSAO",
+        tipo: data.tipo || "CLICK",
+        // Campos opcionais removidos ou com valores padrão para não travar o Prisma
+        pedidoId: data.pedidoId || null, 
+      },
+    });
+  } catch (e) {
+    console.error("Erro no Prisma:", e);
+    throw e; // Isso vai aparecer nos logs do Render
+  }
 }
 
 async function registrarConversao(data: any) {
