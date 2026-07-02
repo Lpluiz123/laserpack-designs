@@ -6,7 +6,7 @@ export const handleClick = async (valorDoProduto, sessionId) => {
   // 2. Avisa o seu banco de dados
 
   try {
-    await fetch("/api/eventos", {
+    await fetch("https://backend-laserpack-designs.onrender.com/api/eventos", {
       method: "POST",
       body: JSON.stringify({
         sessionId: sessionId,
