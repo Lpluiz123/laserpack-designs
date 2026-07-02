@@ -11,7 +11,7 @@ export default function Hero() {
 
     // 2. Se não tem ID, é a primeira vez (ou ele limpou o cache)
     if(!id) {
-        id = crypto.randomUUID()
+        id = Date.now().toString(36) + Math.random().toString(36).substr(2);
         localStorage.setItem('user_session', id)
     }
 
