@@ -1,17 +1,24 @@
-const BASE_URL = "http://localhost:3000";
+export const handleClick = async (valorDoProduto, sessionId) => {
 
-export async function registarClick(produtoId, meuIdAfiliado) {
+  const baseUrl = "https://www.digilabzone.com/lasercutfiles?aff=luizfellipeilha25e3"
+  const urlComRastreio = `${baseUrl}&tracking_id=${sessionId}`
+
+  // 2. Avisa o seu banco de dados
+
   try {
-    const response = await fetch(`${BASE_URL}/registrar-click`, {
+    await fetch("/api/eventos", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ produtoId, meuIdAfiliado }),
-      
+      body: JSON.stringify({
+        sessionId: sessionId,
+        valor: valorDoProduto,
+        tipo: "click_checkout",
+      }),
     });
-
-    return await response.json();
   } catch (error) {
-    console.error("Erro na comunicação com o servidor:", error);
-    return { error: true };
+    // Apenas logamos o erro para você corrigir depois
+    console.error("Falha ao registrar clique no banco, mas a venda segue:", erro);
   }
-}
+
+  //3. Manda o usuário para a página da Digistore24
+  window.location.href = urlComRastreio;
+};

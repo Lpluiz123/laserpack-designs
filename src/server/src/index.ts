@@ -1,34 +1,35 @@
-import { prisma } from './lib/prisma.js';
+import { prisma } from "./lib/prisma.js";
 
-import 'dotenv/config';
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-async function registrarClick(data:any) {
+async function registrarClick(data: any) {
   return await prisma.evento.create({
     data: {
-      sessionId: data.sessionId,
+      sessionId: data.sessionId || "TESTE_DIGISTORE",
       tipo: data.tipo,
-      produtoId: data.produtoId,
-      afiliadoId: data.meuIdAfiliado,
-      pedidoId: data.pedidoId
-
+      produtoId: data.produtoId || "N/A",
+      afiliadoId: data.afiliadoId || "N/A",
+      pedidoId: data.pedidoId,
     },
   });
 }
 
 async function registrarConversao(data: any) {
+  // Traduzimos os dados que vêm da Digistore para o que o seu banco espera
   return await prisma.evento.create({
     data: {
-      sessionId: data.sessionId,
-      tipo: data.tipo,
-      valor: parseFloat(data.valor),
-      status: data.status,
-      pedidoId: data.pedidoId,
+      tipo: "VENDA", // Pode ser fixo para conversões
+      valor: parseFloat(data.amount_brutto) || 0, // Converte para número
+      status: data.event || "COMPLETO",
+      pedidoId: data.order_id || "SEM_ID",
+      sessionId: data.custom || "SEM_SESSAO", // O 'custom' é onde o sessionId costuma ficar
     },
   });
 }
@@ -36,51 +37,92 @@ async function registrarConversao(data: any) {
 /*------------------------------------------------------ */
 
 app.post("/api/evento", async (req, res) => {
-  // Apenas garantindo que o tipo está sendo extraído
-  const { tipo } = req.body;
+  // 1. Log de segurança: Essencial para você ver no Render exatamente o que chegou
+  console.log("Dados brutos recebidos na rota:", req.body);
 
   try {
-    if (tipo === "CLICK") {
-      // Como a função registrarClick já acessa data.pedidoId 
-      // (conforme vimos na outra imagem), passar o req.body inteiro é suficiente
-      await registrarClick(req.body);
+    // Criamos um objeto vazio que vai guardar os dados convertidos
+    // Definimos uma interface ou apenas anotamos o tipo
+    let dadosPadronizados: {
+      sessionId: string;
+      tipo: string;
+      valor: number;
+      pedidoId: any;
+      status: any;
+    } = {
+      sessionId: "",
+      tipo: "",
+      valor: 0,
+      pedidoId: null,
+      status: null,
+    };
+
+    // Cenário A: Os dados vieram da DIGISTORE (identificado pela presença de 'tracking_id')
+    if (req.body.tracking_id) {
+      dadosPadronizados = {
+        sessionId: req.body.tracking_id, // O tracking_id da Digistore vira seu sessionId
+        tipo: "CONVERCAO", // Nós definimos manualmente que é uma conversão
+        valor: parseFloat(req.body.amount) || 0,
+        pedidoId: req.body.order_id,
+        status: req.body.status || "PAID",
+      };
+    }
+    // Cenário B: Os dados vieram do seu FRONT-END (identificado pelo clique do botão)
+    else {
+      dadosPadronizados = {
+        sessionId: req.body.sessionId,
+        // Garantimos que tanto 'CLICK' quanto 'click_checkout' caiam na mesma categoria
+        tipo: "CLICK",
+        valor: req.body.valor || 0,
+        pedidoId: req.body.pedidoId || null,
+        status: null,
+      };
+    }
+
+    console.log("Dados traduzidos e padronizados:", dadosPadronizados);
+
+    // 2. O Roteador de Funções: Agora o banco recebe tudo mastigado
+    if (dadosPadronizados.tipo === "CLICK") {
+      await registrarClick(dadosPadronizados);
       return res.status(200).json({ status: "Clique registrado" });
     }
 
-    if (tipo === "CONVERCAO") {
-      await registrarConversao(req.body);
+    if (dadosPadronizados.tipo === "CONVERCAO") {
+      await registrarConversao(dadosPadronizados);
       return res.status(200).json({ status: "Conversão registrada" });
     }
 
-    return res.status(400).json({ error: "Tipo de evento desconhecido" });
-  } catch (error: any) {
+    return res
+      .status(400)
+      .json({ error: "Tipo de evento desconhecido após tradução" });
+  } catch (error) {
     console.error("ERRO NO PROCESSAMENTO:", error);
-    return res.status(500).json({ error: "Erro ao registrar evento" });
+    return res
+      .status(500)
+      .json({ error: "Erro ao registrar evento no banco de dados" });
   }
 });
 
 
- /*----------------------------------------------------- */
+/*----------------------------------------------------- */
 
 // --- SERVIDOR ---
 app.listen(3000, () => {
   console.log("Servidor rodando em http://localhost:3000");
 });
 
-
 /*------------------------------------------*/
 
-import { Client } from 'pg';
+import { Client } from "pg";
 
 async function testarConexao() {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
-});
-  
   try {
     await client.connect();
     console.log("CONEXÃO COM O BANCO BEM SUCEDIDA!");

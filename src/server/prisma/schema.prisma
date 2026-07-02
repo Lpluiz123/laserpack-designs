@@ -7,14 +7,13 @@ datasource db {
 }
 
 model Evento {
-  id           String   @id @default(uuid())
-  sessionId    String
-  tipo         String
-  produtoId    String?
-  afiliadoId   String?
-  valor        Decimal?
-  status       String?
-  pedidoId     String?
-  createdAt    DateTime @default(now())
+  id         String   @id @default(uuid())
+  sessionId  String
+  tipo       String
+  produtoId  String?
+  afiliadoId String?
+  pedidoId   String?
+  valor      Decimal?
+  status     String?
+  createdAt  DateTime @default(now())
 }
-

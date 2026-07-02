@@ -1,19 +1,24 @@
-import { registarClick } from "../services/api";
+import { handleClick } from "../services/api";
+import { useEffect, useState } from "react";
+
 
 export default function Hero() {
-  const handleComprar = async (e) => {
-    e.preventDefault();
+ const [sessionId, setSessionId] = useState('');
 
-    // Captura os parâmetros da URL atual do navegador
-    const urlParams = new URLSearchParams(window.location.search);
+  useEffect(() =>{
+    // 1. Tenta buscar no navegador do usuário
+    let id = localStorage.getItem('user_session')
 
-    // Pega os valores dinamicamente. Se não existir, usa um padrão.
-    const produtoId = urlParams.get("produto") || "produto-padrao";
-    const meuIdAfiliado = urlParams.get("aff") || "sem-afiliado";
+    // 2. Se não tem ID, é a primeira vez (ou ele limpou o cache)
+    if(!id) {
+        id = crypto.randomUUID()
+        localStorage.setItem('user_session', id)
+    }
 
-    await registarClick(produtoId, meuIdAfiliado);
-    window.location.href = `https://www.digilabzone.com/lasercutfiles?aff=${meuIdAfiliado}`;
-  };
+    // 3. Define o estado para o seu front-end usar no link
+    setSessionId(id)
+    console.log("Session ID carregado:", id);
+},[])
 
   return (
     <section className="bg-slate-50 py-16 px-6 text-center">
@@ -33,7 +38,7 @@ export default function Hero() {
         {/* Botão de Chamada para Ação (CTA) */}
         <div className="mt-10 flex justify-center hidden md:flex">
           <button
-            onClick={handleComprar}
+            onClick={() => handleClick(0)}
             className="bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 px-8 rounded-full text-xl shadow-lg transition-all transform hover:scale-105 cursor-pointer"
           >
             SHOP ALL DESIGNS NOW
