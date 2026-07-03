@@ -4,6 +4,7 @@ import ProductCard from './components/ProductCard'
 import StickyCTA from './components/StickyCTA';
 import Footer from './components/Footer'
 import { products } from './data'
+import DashBoard from './components/DashBoard';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           ))}
         </div>
       </section>
+      {process.env.NODE_ENV === 'development' && <DashBoard />}
       <Footer />
       <StickyCTA />
     </main>

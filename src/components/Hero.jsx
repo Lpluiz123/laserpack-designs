@@ -1,9 +1,9 @@
 import { handleClick } from "../services/api";
 import { useEffect, useState } from "react";
 
-
 export default function Hero() {
  const [sessionId, setSessionId] = useState('');
+ 
 
   useEffect(() =>{
     // 1. Tenta buscar no navegador do usuário
