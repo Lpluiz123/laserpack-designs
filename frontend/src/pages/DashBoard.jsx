@@ -21,17 +21,24 @@ const [metricas, setMetricas] = useState({
 const carregarDados = async () => {
   setLoading(true);
   try {
+    // RECUPERE O SEU TOKEN AQUI (de onde você o armazena, como localStorage)
+    const token = localStorage.getItem('token'); 
+
     const resposta = await fetch(
-      `https://backend-laserpack-designs.onrender.com/api/dashboard?dias=${dias}`,
+      `https://backend-laserpack-designs.onrender.com/api/dashboard?dias=${dias}`, 
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`, // AQUI ESTÁ A CHAVE QUE FALTA
+          'Content-Type': 'application/json'
+        }
+      }
     );
-    if (!resposta.ok) throw new Error("Erro na rede");
+
+    if (!resposta.ok) throw new Error("Erro na rede ou não autorizado");
 
     const dados = await resposta.json();
-    
-    // ADICIONE ESTE LOG ABAIXO:
     console.log("DEBUG - Dados recebidos:", dados);
-    console.log("DEBUG - Historico recebido:", dados.historico);
-    
     setMetricas(dados);
   } catch (error) {
     console.error("Erro ao buscar dados:", error);
