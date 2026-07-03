@@ -16,6 +16,7 @@ export default function DashBoard() {
     historico: [],
   });
   const [loading, setLoading] = useState(true);
+  const [taxaConversao, setTaxaConversao] = useState(0);
 
   const carregarDados = async () => {
     setLoading(true);
@@ -29,13 +30,12 @@ export default function DashBoard() {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
 
       if (!resposta.ok) throw new Error(`Erro: ${resposta.status}`);
 
       const dados = await resposta.json();
-      console.log("DEBUG - Dados recebidos:", dados); // Se não aparecer o gráfico, olhe este log no F12
       setMetricas(dados);
     } catch (error) {
       console.error("Erro ao buscar dados:", error);
@@ -44,14 +44,19 @@ export default function DashBoard() {
     }
   };
 
+  // Corrige o cálculo para reagir apenas quando os dados chegam
+  useEffect(() => {
+    if (metricas.clicks > 0) {
+      const calc = ((metricas.conversoes / metricas.clicks) * 100).toFixed(0);
+      setTaxaConversao(calc);
+    } else {
+      setTaxaConversao(0);
+    }
+  }, [metricas]);
+
   useEffect(() => {
     carregarDados();
   }, []);
-
-  const taxaConversao =
-    metricas.clicks > 0
-      ? ((metricas.conversoes / metricas.clicks) * 100).toFixed(1)
-      : 0;
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto mt-10 border border-gray-200">
@@ -60,37 +65,26 @@ export default function DashBoard() {
       </h1>
 
       <div className="grid grid-cols-3 gap-2 mb-6">
-        {/* Card 1: Cliques */}
         <div className="p-2 bg-blue-50 rounded text-center border border-blue-100">
-          <p className="text-[10px] text-gray-500 uppercase font-bold">
-            Cliques
-          </p>
+          <p className="text-[10px] text-gray-500 uppercase font-bold">Cliques</p>
           <p className="text-xl font-bold text-blue-700">{metricas.clicks}</p>
         </div>
 
-        {/* Card 2: Conversões (número absoluto) */}
         <div className="p-2 bg-purple-50 rounded text-center border border-purple-100">
           <p className="text-[10px] text-gray-500 uppercase font-bold">Conv.</p>
-          <p className="text-xl font-bold text-purple-700">
-            {metricas.conversoes}
-          </p>
+          <p className="text-xl font-bold text-purple-700">{metricas.conversoes}</p>
         </div>
 
-        {/* Card 3: Taxa de Conversão (%) */}
         <div className="p-2 bg-green-50 rounded text-center border border-green-100">
           <p className="text-[10px] text-gray-500 uppercase font-bold">Taxa</p>
           <p className="text-xl font-bold text-green-700">
-            {metricas.clicks > 0
-              ? ((metricas.conversoes / metricas.clicks) * 100).toFixed(0)
-              : 0}
-            %
+            {loading ? "..." : `${taxaConversao}%`}
           </p>
         </div>
       </div>
+
       <div className="mt-8">
-        <h2 className="text-lg font-bold mb-4 text-gray-800">
-          Evolução Diária
-        </h2>
+        <h2 className="text-lg font-bold mb-4 text-gray-800">Evolução Diária</h2>
 
         {loading ? (
           <p className="text-center text-gray-500">Carregando...</p>
@@ -98,25 +92,17 @@ export default function DashBoard() {
           <div style={{ width: "100%", height: 400 }}>
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={metricas.historico}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  vertical={false}
-                  stroke="#e5e7eb"
-                />
-
-                {/* Aumentei a fonte dos eixos para ficarem proporcionais ao novo tamanho */}
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
                 <XAxis dataKey="data" fontSize={14} tickMargin={10} />
                 <YAxis fontSize={14} />
-
                 <Tooltip />
-
                 <Line
                   type="monotone"
                   dataKey="clicks"
                   stroke="#3b82f6"
-                  strokeWidth={4} // Linha mais grossa para destacar
+                  strokeWidth={4}
                   connectNulls={true}
-                  dot={{ r: 6 }} // Pontos maiores
+                  dot={{ r: 6 }}
                 />
                 <Line
                   type="monotone"
