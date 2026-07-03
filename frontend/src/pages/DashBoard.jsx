@@ -21,15 +21,16 @@ const [metricas, setMetricas] = useState({
 const carregarDados = async () => {
   setLoading(true);
   try {
-    // RECUPERE O SEU TOKEN AQUI (de onde você o armazena, como localStorage)
+    // 1. Recupere o token (ajuste a chave conforme o seu sistema de login)
     const token = localStorage.getItem('token'); 
 
+    // 2. Realize a chamada com o header de autorização
     const resposta = await fetch(
       `https://backend-laserpack-designs.onrender.com/api/dashboard?dias=${dias}`, 
       {
         method: 'GET',
         headers: {
-          'Authorization': `Bearer ${token}`, // AQUI ESTÁ A CHAVE QUE FALTA
+          'Authorization': `Bearer ${token}`, // Essencial para o backend aceitar a requisição
           'Content-Type': 'application/json'
         }
       }
@@ -38,6 +39,8 @@ const carregarDados = async () => {
     if (!resposta.ok) throw new Error("Erro na rede ou não autorizado");
 
     const dados = await resposta.json();
+    
+    // O console.log que você adicionou mostrará o JSON aqui
     console.log("DEBUG - Dados recebidos:", dados);
     setMetricas(dados);
   } catch (error) {
