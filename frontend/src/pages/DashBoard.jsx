@@ -54,7 +54,7 @@ export default function DashBoard() {
       : 0;
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-sm mx-auto mt-10 border border-gray-200">
+    <div className="p-6 bg-white rounded-lg shadow-lg max-w-lg mx-auto mt-10 border border-gray-200">
       <h1 className="text-xl font-bold mb-4 text-gray-800">
         Painel de Diagnóstico
       </h1>
@@ -95,33 +95,36 @@ export default function DashBoard() {
         {loading ? (
           <p className="text-center text-gray-500">Carregando...</p>
         ) : metricas.historico && metricas.historico.length > 0 ? (
-          <div style={{ width: "100%", height: 250 }}>
-            <ResponsiveContainer width="100%" height={250}>
+          <div style={{ width: "100%", height: 400 }}>
+            <ResponsiveContainer width="100%" height="100%">
               <LineChart data={metricas.historico}>
                 <CartesianGrid
                   strokeDasharray="3 3"
                   vertical={false}
                   stroke="#e5e7eb"
                 />
-                <XAxis dataKey="data" fontSize={10} tickMargin={10} />
-                <YAxis fontSize={10} />
+
+                {/* Aumentei a fonte dos eixos para ficarem proporcionais ao novo tamanho */}
+                <XAxis dataKey="data" fontSize={14} tickMargin={10} />
+                <YAxis fontSize={14} />
+
                 <Tooltip />
-                {/* A propriedade 'connectNulls' ajuda a desenhar a linha mesmo se houver falhas */}
+
                 <Line
                   type="monotone"
                   dataKey="clicks"
                   stroke="#3b82f6"
-                  strokeWidth={3}
+                  strokeWidth={4} // Linha mais grossa para destacar
                   connectNulls={true}
-                  dot={{ r: 4 }}
+                  dot={{ r: 6 }} // Pontos maiores
                 />
                 <Line
                   type="monotone"
                   dataKey="conversoes"
                   stroke="#9333ea"
-                  strokeWidth={3}
+                  strokeWidth={4}
                   connectNulls={true}
-                  dot={{ r: 4 }}
+                  dot={{ r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
