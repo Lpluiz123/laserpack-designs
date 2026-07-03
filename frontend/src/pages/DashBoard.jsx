@@ -21,28 +21,24 @@ const [metricas, setMetricas] = useState({
 const carregarDados = async () => {
   setLoading(true);
   try {
-    // 1. Recupere o token (ajuste a chave conforme o seu sistema de login)
-    const token = localStorage.getItem('token'); 
+    // 1. Recupera o token que foi salvo no login
+    const token = localStorage.getItem("authToken"); 
 
-    // 2. Realize a chamada com o header de autorização
-    const resposta = await fetch(
-      `https://backend-laserpack-designs.onrender.com/api/dashboard?dias=${dias}`, 
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`, // Essencial para o backend aceitar a requisição
-          'Content-Type': 'application/json'
-        }
+    const resposta = await fetch("https://backend-laserpack-designs.onrender.com/api/dashboard?dias=7", {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`, // <-- ISSO É O QUE FALTA!
+        'Content-Type': 'application/json'
       }
-    );
+    });
 
-    if (!resposta.ok) throw new Error("Erro na rede ou não autorizado");
+    if (!resposta.ok) {
+       // Se o servidor retornar 403, é porque o token está faltando ou inválido
+       throw new Error(`Erro: ${resposta.status}`);
+    }
 
     const dados = await resposta.json();
-    
-    // O console.log que você adicionou mostrará o JSON aqui
-    console.log("DEBUG - Dados recebidos:", dados);
-    setMetricas(dados);
+    setMetricas(dados); // Agora os dados chegarão aqui
   } catch (error) {
     console.error("Erro ao buscar dados:", error);
   } finally {
