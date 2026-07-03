@@ -17,3 +17,9 @@ model Evento {
   status     String?
   createdAt  DateTime @default(now())
 }
+
+model Usuario {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
