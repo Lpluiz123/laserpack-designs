@@ -63,8 +63,8 @@ const Login = () => {
         theme="colored"
         transition={Bounce}
       />
-      // Container principal: centraliza na tela e usa a mesma cor de fundo da
-      Home
+
+
       <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
         {/* Card do formulário: branco, com sombra e borda arredondada */}
         <div className="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-100">
