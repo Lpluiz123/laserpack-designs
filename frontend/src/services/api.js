@@ -1,7 +1,7 @@
 export const handleClick = async (valorDoProduto) => {
   const sessionId = localStorage.getItem("user_session");
 
-  const DIGISTORE_LINK = "https://www.digistore24.com/redir/639602/luizfellipeilha25e3/";
+  const DIGISTORE_LINK = "https://www.betterdailyguide.site/ds24/the-desk-job-survival-guide";
 
   if (!sessionId) {
     console.warn("Sem sessão, redirecionando sem registro.");

@@ -1,4 +1,5 @@
 import imagemDor from '../assets/imagem_dor1.png'
+import { handleClick } from '../services/api';
 
 const Hero = () => {
   return (
@@ -22,12 +23,18 @@ const Hero = () => {
       </p>
 
       <div className="hidden md:flex flex-col items-center gap-4">
-        <a
+        {/* <a
           href="https://www.betterdailyguide.site/ds24/the-desk-job-survival-guide"
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition"
         >
           Get Instant Access Now
-        </a>
+        </a> */}
+<button
+  onClick={() => handleClick()}
+  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition cursor-pointer"
+>
+  Get Instant Access Now
+</button>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <span>✅ Secure Checkout</span>
           <span>⭐ Satisfaction Guaranteed</span>
