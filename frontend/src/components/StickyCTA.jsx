@@ -1,17 +1,17 @@
-import { handleClick } from "../services/api"; // Importe a função
+import { handleClick } from "../services/api";
 
 export default function StickyCTA() {
   
-  // Função para lidar com o clique
   const handleCtaClick = (e) => {
-    e.preventDefault(); // Impede o redirecionamento imediato
+    e.preventDefault();
     
-    // Pega o ID que salvamos no localStorage lá no Hero
+    // O sessionId continua sendo fundamental para o seu rastreamento
     const sessionId = localStorage.getItem('user_session') || "SEM_SESSAO";
     
-    // Chama a função de rastreamento que você já tem
-    // Supondo que você queira passar um valor de "0" ou preço fixo inicial
+    // Dispara o evento de clique para o seu Dashboard
     handleClick(0, sessionId); 
+
+    window.location.href = "https://www.betterdailyguide.site/ds24/the-desk-job-survival-guide"; 
   };
 
   return (
@@ -19,9 +19,9 @@ export default function StickyCTA() {
       <div className="max-w-5xl mx-auto">
         <button 
           onClick={handleCtaClick}
-          className="block w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl text-center text-lg shadow-lg transition-transform active:scale-95"
+          className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-center text-lg shadow-lg transition-transform active:scale-95"
         >
-          SHOP ALL DESIGNS NOW
+          Get Pain-Free Now
         </button>
       </div>
     </div>

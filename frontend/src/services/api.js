@@ -1,16 +1,15 @@
 export const handleClick = async (valorDoProduto) => {
   const sessionId = localStorage.getItem("user_session");
-  const BASE_URL = "https://www.digilabzone.com/lasercutfiles?aff=luizfellipeilha25e3";
 
-  // Se não tem sessão, apenas redireciona sem tentar salvar (evita erro)
+  const DIGISTORE_LINK = "https://www.digistore24.com/redir/639602/luizfellipeilha25e3/";
+
   if (!sessionId) {
     console.warn("Sem sessão, redirecionando sem registro.");
-    window.location.href = BASE_URL;
+    window.location.href = DIGISTORE_LINK;
     return;
   }
 
   try {
-    // Tenta registrar o clique
     await fetch("https://backend-laserpack-designs.onrender.com/api/evento", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -21,9 +20,9 @@ export const handleClick = async (valorDoProduto) => {
       }),
     });
   } catch (error) {
-    console.error("Erro ao registrar clique (silencioso):", error);
+    console.error("Erro ao registrar clique:", error);
   } finally {
-    // Redireciona sempre, independente de sucesso ou falha no POST
-    window.location.href = `${BASE_URL}&tracking_id=${sessionId}`;
+    // 2. MUDANÇA: Usamos 'tid' que é o parâmetro de rastreamento da Digistore
+    window.location.href = `${DIGISTORE_LINK}?tid=${sessionId}`;
   }
 };
