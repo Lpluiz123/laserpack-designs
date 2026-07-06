@@ -32,7 +32,7 @@ const Login = () => {
         setTimeout(() => {
           window.location.href = "/dashboard";
         }, 6000);
-        
+
       } else {
         // DISPARA ERRO DE CREDENCIAIS
         toast.error("Usuário ou senha inválidos.");
@@ -139,7 +139,7 @@ const Login = () => {
 
           {/* Rodapé do card (opcional) */}
           <div className="mt-8 pt-6 border-t border-slate-100 text-center text-xs text-slate-400">
-            Sistema de Gestão de Arquivos de Corte - &copy;{" "}
+            Sistema de Gerenciamento - Dashboard - &copy;{" "}
             {new Date().getFullYear()}
           </div>
         </div>
