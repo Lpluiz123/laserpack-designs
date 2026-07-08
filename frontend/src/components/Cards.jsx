@@ -5,9 +5,20 @@ export function Cards() {
     <h2 className="text-3xl font-bold text-center text-slate-950 mb-12">
       What our members are saying
     </h2>
-    
-    <div className="grid gap-8 md:grid-cols-2">
-      {/* Depoimento 1 */}
+
+
+    <div className="grid gap-11 md:grid-cols-3">
+        {/* Depoimento 1 */}
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+        <div className="text-yellow-400 mb-4 text-lg">★★★★★</div>
+        <p className="text-slate-600 mb-6 italic">
+          "I'm a software developer who sits 12+ hours daily. After just 2 weeks, my chronic lower back pain is completely gone. My energy levels are through the roof. This saved my career and my health!"
+        </p>
+        <p className="font-bold text-slate-950">— Jessica K.</p>
+        <p className="text-sm text-slate-500">Software Developer, Seattle</p>
+      </div>
+
+      {/* Depoimento 2 */}
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
         <div className="text-yellow-400 mb-4 text-lg">★★★★★</div>
         <p className="text-slate-600 mb-6 italic">
@@ -17,7 +28,7 @@ export function Cards() {
         <p className="text-sm text-slate-500">Financial Analyst, New York</p>
       </div>
 
-      {/* Depoimento 2 */}
+      {/* Depoimento 3 */}
       <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
         <div className="text-yellow-400 mb-4 text-lg">★★★★★</div>
         <p className="text-slate-600 mb-6 italic">
