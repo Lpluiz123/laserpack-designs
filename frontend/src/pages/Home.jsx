@@ -4,12 +4,14 @@ import ProblemSection from '../sections/ProblemSection';
 import SolutionSection from '../sections/SoluctionSection';
 import StickyCTA from '../components/StickyCTA';
 import Footer from '../components/Footer';
+import { Cards } from '../components/Cards';
 
 const Home = () => {
   return (
     <main className="bg-slate-50 min-h-screen">
       {/* O componente Hero deve conter o título principal de alto impacto */}
       <Hero />
+      <Cards />
       <BenefitsSecion />
       <ProblemSection />
       <SolutionSection />

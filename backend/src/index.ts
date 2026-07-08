@@ -24,7 +24,7 @@ const checkAuth = (req: Request, res: Response, next: NextFunction) => {
   }
 
   // 2. Se tem token, verifica se é válido
-  jwt.verify(token, JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, (err) => {
     if (err) {
       return res.status(403).json({ error: "Token inválido ou expirado" });
     }
