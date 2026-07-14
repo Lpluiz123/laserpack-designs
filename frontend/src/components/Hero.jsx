@@ -18,8 +18,7 @@ const Hero = () => {
       </h1>
 
       <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
-        Discover the doctor-approved, 7-minute daily routine to eliminate
-        desk-induced back pain and reclaim your posture.
+        I've personally used this doctor-approved, 7-minute daily routine to eliminate my desk-induced back pain. Click below to see the exact method for yourself.
       </p>
 
       <div className="hidden md:flex flex-col items-center gap-4">
@@ -33,7 +32,7 @@ const Hero = () => {
   onClick={() => handleClick()}
   className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-lg text-lg transition cursor-pointer"
 >
-  Get Instant Access Now
+  Yes, Show Me the 7-Minute Routine Now
 </button>
         <div className="flex items-center gap-2 text-sm text-slate-500">
           <span>✅ Secure Checkout</span>

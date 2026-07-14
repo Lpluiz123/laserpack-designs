@@ -21,7 +21,7 @@ export default function StickyCTA() {
           onClick={handleCtaClick}
           className="block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-center text-lg shadow-lg transition-transform active:scale-95"
         >
-          Get Pain-Free Now
+          Yes, Show Me the 7-Minute Routine Now
         </button>
       </div>
     </div>
